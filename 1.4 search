@@ -1,0 +1,23 @@
+Depth First Search (DFS) 
+search(col)
+ 2     if filled all columns
+ 3         print solution and exit 
+
+ 4   for each row
+ 5       if board(row, col) is not attacked
+ 6            place queen at (row, col)
+ 7            search(col+1)
+ 8            remove queen at (row, col)
+ 
+ 
+ 
+ Breadth First Search (BFS)
+  1 process(state)
+ 2     for each possible next state from this one
+ 3         enqueue next state 
+
+ 4 search()
+ 5     enqueue initial state
+ 6     while !empty(queue)
+ 7         state = get state from queue
+ 8         process(state)
