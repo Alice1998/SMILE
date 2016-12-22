@@ -1,0 +1,77 @@
+#include "stdafx.h"
+
+/*
+ID: alicerd1
+PROG: wormhole
+LANG: C++
+*/
+#include<iostream>
+#include<cstring>
+#include<cmath>
+#include<fstream>
+using namespace std;
+int n;
+int getnext[14] = { 0 }, makepair[14] = { 0 };
+int a[14][2];
+bool cycle()
+{
+	for (int i = 1; i <= n; i++)//遍历每一种可能的开始地点
+	{
+		int pos = i;
+		for (int j = 1; j <= n; j++)//用次数说明循环，而不是相等
+		{
+			pos = makepair[getnext[pos]];//pos打错成i
+		}
+		if (pos != 0)//最终还有指向
+			return true;
+	}
+	return false;
+}
+int solve()
+{
+	//匹配1
+	//已经全部匹配，判断
+	//循环继续迭代匹配，注意回溯
+	int i = 1, ans = 0;
+	for (; makepair[i] != 0; i++)
+		;
+	if (i == n+1)
+	{
+		if (cycle())
+			return 1;//迭代巧妙
+		return 0;
+	}
+	for (int j = i + 1; j <= n; j++)//i,j wrong
+	{
+		if (makepair[j] == 0)
+		{
+			makepair[i] = j; 
+			makepair[j] = i;  
+			ans = ans + solve();
+			makepair[i] = 0, makepair[j] = 0;
+			//return ans;
+		}
+		//return ans;
+	}
+	return ans;//每一步都要有return,回溯问题,不能再循环里
+}
+int main()
+{
+	//ofstream fout("wormhole.out");
+	//ifstream fin("wormhole.in");
+	cin >> n;
+	for (int i = 1; i <= n; i++)
+		cin >> a[i][0] >> a[i][1];
+	for (int i = 1; i <= n;i++)
+	for (int j = 1; j <= n; j++)
+	{
+		if (a[i][0] < a[j][0] && a[i][1] == a[j][1])
+		{
+			if (getnext[i] == 0 || a[getnext[i]][0] - a[i][0]>a[j][0] - a[i][0])
+				getnext[i] = j;
+		}
+	}
+	cout << solve() << endl;
+		system("pause");
+	return 0;
+}
