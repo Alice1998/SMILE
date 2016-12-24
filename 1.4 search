@@ -11,6 +11,7 @@ search(col)
  
  
  
+ 
  Breadth First Search (BFS)
   1 process(state)
  2     for each possible next state from this one
@@ -21,3 +22,138 @@ search(col)
  6     while !empty(queue)
  7         state = get state from queue
  8         process(state)
+ 
+ 骑士聚会问题
+ int tail=0;
+void get(int x, int y, int ji,int b)
+{
+	if (tail == 25）//多出一位的0-24
+ return;
+	head = tail;
+	for (int j = 0; j < 8; j++)
+	{
+		if (okjump(x + dx[j], y + dy[j],b))
+		{
+			jump[b][tail].x = x + dx[j];
+			jump[b][tail].y = y + dy[j];
+			ever[b][jump[b][tail].x][jump[b][tail].y]++;
+			jump[b][tail].k = j;
+			jump[b][tail].num = ji;
+			tail++;
+		}
+	}
+	for (int i = head; i <tail; i++)//一开始位置放错了
+	{
+		get(jump[b][i].x, jump[b][i].y, ji + 1,b);
+	}
+}
+
+
+
+Depth First with Iterative Deepening (ID)
+ 1 truncated_dfsearch(hnextpos, depth)
+ 2     if board is covered
+ 3         print solution and exit 
+
+ 4     if depth == 0
+ 5         return 
+
+ 6     for i from nextpos to n*n
+ 7         put knight at i
+ 8         truncated_dfsearch(i+1, depth-1)
+ 9         remove knight at i 
+
+10 dfid_search
+11     for depth = 0 to max_depth
+12        truncated_dfsearch(0, depth)
+
+
+
+Remember the ordering properties of each search. If the program needs to produce a list sorted shortest solution 
+first (in terms of distance from the root node), use breadth first search or iterative deepening. For other orders, 
+depth first search is the right strategy. 
+
+
+Analysis: This problem actually is two recursive problems: one recursing on the set of nomads to use, the other on 
+when the nomads turn back. Depth-first search with iterative deepening works well here to determine the nomads required,
+trying first if any one can make it across by themselves, then seeing if two work together to get across, etc. 
+
+
+ 1 #include <cstdio>
+ 2 #include <cstring>
+ 3 #include <algorithm>
+ 4 #include <iostream>
+ 5 #include <vector>
+ 6 #include <cmath>
+ 7 
+ 8 using namespace std;
+ 9 
+10 const int N = 1 << 11;
+11 int ep2[15], lg2[N];
+12 #define REP(i, n) for (int i = 0; i < (n); i++)
+13 #define REP_1(i, n) for (int i = 1; i <= (n); i++)
+14 #define DEC(i, a, b) for (int i = (a); i >= (b); i--)
+15 #define PB push_back
+16 #define SZ(x) ((int) (x).size())
+17 
+18 void PRE() {
+19     REP(i, 15) {
+20         ep2[i] =  1 << i;
+21     }
+22     int t = 0;
+23     REP(i, N) {
+24         if (ep2[t + 1] <= i) t++;
+25         lg2[i] = t;
+26     }
+27 //    REP(i, 10) cout << lg2[i] << endl;
+28 }
+29 
+30 int st[20], top;
+31 
+32 bool dfs(int n, int depth) {
+33     if (st[top] == n) return true;
+34     if (top >= depth) return false;
+35     int last = st[top];
+36     if ((last << (depth - top)) < n) return false;
+37     if (st[top] <= 1200) {
+38         DEC(i, top, 0) {
+39             st[++top] = last + st[i];
+40             if (dfs(n, depth)) return true;
+41             top--;
+42         }
+43     }
+44     REP(i, top + 1) {
+45         st[++top] = last - st[i];
+46         if (st[top] > 1) {
+47             if (dfs(n, depth)) return true;
+48         }
+49         top--;
+50     }
+51     return false;
+52 }
+53 
+54 int main() {
+55 //    freopen("out", "w", stdout);
+56     int n;
+57     PRE();
+58 //    REP_1(n, 1000) {
+59 //        int step = lg2[n];
+60 //        while (step <= 12) {
+61 //            st[top = 0] = 1;
+62 //            if (dfs(n, step)) break;
+63 //            step++;
+64 //        }
+65 //        cout << n << ' ' << step << endl;
+66 //    }
+67 //    return 0;
+68     while (cin >> n && n) {
+69         int step = lg2[n];
+70         while (step <= 12) {
+71             st[top = 0] = 1;
+72             if (dfs(n, step)) break;
+73             step++;
+74         }
+75         cout << step << endl;
+76     }
+77     return 0;
+78 }
