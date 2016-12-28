@@ -1,0 +1,53 @@
+all integers of the form p2 + q2的等差数列
+/*
+ID: alicerd1
+PROG: ariprog
+LANG: C++
+*/
+#include<iostream>
+#include<cstring>
+#include<cmath>
+#include<fstream>
+using namespace std;
+int n, m;
+int flag=0;
+int che[126000] = { 0 };
+ofstream fout("ariprog.out");
+	ifstream fin("ariprog.in");
+void check(int k)
+{
+	int b, c;
+	for (int i = 0; i <= sqrt(k/2) && i <= m; i++)
+	{
+		b = k - i*i;
+		c = int(sqrt(b));
+		if (b == c*c&&c <= m)
+		{
+			che[k] = 1;
+return;
+		}
+	}
+	che[k] = -1;
+}
+void solve(int a,int b)
+{
+	for (int i = 0; i < n;i++)//不是等于n
+	if (che[a + i*b] != 1)
+		return;
+flag=1;
+	fout << a << ' ' << b << endl;
+
+}
+int main()
+{
+	
+	fin >> n>>m;
+for(int i=0;i<=2*m*m;i++)
+check(i);
+	for (int b = 1; b <= 2 * m*m/(n-1);b++)
+	for (int a = 0; a <= 2 * m*m -(n-1)*b; a++)
+		solve(a, b);
+if(flag==0)
+fout<<"NONE"<<endl;
+	return 0;
+}
