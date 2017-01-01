@@ -1,0 +1,18 @@
+Summary
+
+In summary, these operators enable setting, clearing, toggling, and testing any bit or combination of bits in an integer:
+
+		a |= 0x20;		/* turn on bit 0x20 */
+		a &= ~0x20;		/* turn off bit 0x20 */
+		a ^= 0x20;		/* toggle bit 0x20 */
+		if (a & 0x20) {
+			/* then the 0x20 bit is on */
+		}
+    
+    a << n        /* shift a left n bits
+	  a >> n        /* shift a right n bits
+  
+  Consider a
+five-bit binary number like 00110. If that number is shifted one
+bit left, it becomes: 01100. On the other hand, if 00110 is shift
+one bit to the right, it becomes 000011.
