@@ -1,0 +1,171 @@
+2.1 2
+add checkprime  instead of checking value of the fraction;
+                highlight to i instead of sqrt(i);
+
+
+
+
+
+# component(i) denotes the
+# component that node i is in
+ 1 function flood_fill(new_component) 
+
+ 2 do
+ 3   num_visited = 0
+ 4   for all nodes i
+ 5     if component(i) = -2
+ 6       num_visited = num_visited + 1
+ 7       component(i) = new_component
+ 8       for all neighbors j of node i
+ 9         if component(j) = nil
+10           component(j) = -2
+11 until num_visited = 0 
+
+12 function find_components 
+
+13  num_components = 0
+14  for all nodes i
+15    component(node i) = nil
+16  for all nodes i
+17    if component(node i) is nil
+18      num_components =
+                 num_components + 1
+19      component(i) = -2
+20      flood_fill(component
+                        num_components)
+                        
+                        
+/*
+ID:
+PROG:castle
+LANG:C++
+*/
+
+#include<stdio.h>
+#include<iostream>
+using namespace std;
+int tmp, res = 0,yy = 0,bb[55][55],d[55];
+struct castle
+{
+      bool e;
+      bool s;
+      bool w;
+      bool n;
+      bool flag;
+      int v;
+}c[55][55];
+
+void flood(int a,int b)
+{
+    c[a][b].flag = true;
+    if(!c[a][b].n && !c[a-1][b].flag)
+    {
+                  ++ tmp;
+                  c[a - 1][b].s = true;
+                  bb[a-1][b] = yy;
+                  flood(a - 1, b);
+    }
+    if(!c[a][b].s && !c[a+1][b].flag)
+    {
+                  ++ tmp;
+                  c[a+1][b].n = true;
+                  bb[a+1][b] = yy;
+                  flood(a + 1, b);
+    }
+    if(!c[a][b].w && !c[a][b-1].flag)
+    {
+                  ++ tmp;
+                  c[a][b-1].e = true;
+                  bb[a][b-1] = yy;
+                  flood(a, b - 1);
+    }
+    if(!c[a][b].e && !c[a][b+1].flag)
+    {
+                  ++ tmp;
+                  c[a][b+1].w=true;
+                  bb[a][b+1] = yy;
+                  flood(a, b + 1);
+    }
+    if(tmp > res)
+    res = tmp;
+}
+int main()
+{
+    freopen("castle.in","r",stdin);
+    freopen("castle.out","w",stdout);
+    int m,n,total;
+    scanf("%d%d",&m,&n);
+    for(int i = 1; i <= n; ++ i)
+    for(int j = 1; j <= m; ++ j)
+    {
+            scanf("%d", &total);
+            if(total >= 8)
+            {
+            c[i][j].s = true;
+            total -= 8;
+            }
+            if(total >= 4)
+            {
+                     c[i][j].e = true;
+                     total -= 4;
+            }
+            if(total >= 2)
+            {
+                     c[i][j].n = true;
+                     total -= 2;        
+            }
+            if(total >= 1)
+            {
+                     c[i][j].w = true;
+            }
+    }
+    for(int i = 1; i <= n; ++ i)
+    for(int j = 1; j <= m; ++ j)
+    {
+            if(!c[i][j].flag)
+            {
+            tmp = 1;  
+            ++ yy;             
+            flood(i,j);
+            c[i][j].v = tmp;
+            bb[i][j] = yy;
+            d[yy] = tmp;
+            }
+           
+    }
+    total = 0;
+    int gg, mm;
+    char ch;
+    for(int j = 1; j <= m; ++ j)
+    for(int i = n; i >= 1; -- i)
+    {
+           
+            if(c[i][j].n && (bb[i][j] != bb[i-1][j]))
+            {
+                          tmp = d[bb[i][j]] + d[bb[i-1][j]];
+                          if(tmp > total)
+                          {
+                                 total = tmp;
+                                 gg = i;
+                                 mm = j;
+                                 ch = 'N';
+                          }
+            }
+            if(c[i][j].e && (bb[i][j] != bb[i][j+1]))
+            {
+                          tmp = d[bb[i][j]] + d[bb[i][j + 1]];
+                          if(tmp > total)
+                          {
+                                 total = tmp;
+                                 gg = i;
+                                 mm = j;
+                                 ch = 'E';
+                          }
+            }
+    }
+    printf("%d\n",yy);
+    printf("%d\n",res);
+    printf("%d\n",total);
+    printf("%d %d %c\n",gg, mm, ch);
+    return 0;
+}
