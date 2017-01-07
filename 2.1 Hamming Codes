@@ -1,0 +1,84 @@
+dfso
+0 is in the ans set!!!
+
+error   solve weishu
+
+#include "stdafx.h"
+
+
+
+/*
+ID: alicerd1
+PROG: hamming
+LANG: C++
+*/
+#include<iostream>
+#include<cstring>
+#include<cmath>
+#include <algorithm>
+#include<fstream>
+using namespace std;
+//ofstream fout("ariprog.out");
+//ifstream fin("ariprog.in");
+int n, b, d;
+int flag = 0;
+int ans[70], len = 0;
+int getnum(int x)
+{
+	int ans = 0;
+	x = x * 2;
+	for (int i = 0; i < b; i++)
+		ans = (x / 2) % 2 + ans, x = x / 2;
+	return ans;
+}
+bool check(int x,int length)
+{
+	int temp = 0;
+	for (int i = 0; i < length; i++)
+	{
+		temp = ans[i] ^ x;
+		if (getnum(temp) < d)
+			return false;
+	}
+	return true;
+}
+void output()
+{
+	int length = n / 10 + 1;
+	for (int j = 0; (j < length)&&(j*10<n); j++)
+	{
+		cout << ans[j*10];
+		for (int i = 1; (i < 10) && (j*10+i) < n; i++)
+			cout << ' ' << ans[j*10+i];
+		cout << endl;
+	}
+	flag = 1;
+}
+void solve(int num)
+{
+	if (num>=pow(2, b)&&len!=n)
+		return;
+	if (len == n)
+	{
+		if (flag==0)
+			output();
+		return;
+	}
+	if (check(num, len))
+	{
+		ans[len] = num, len++;
+		solve(num + 1);
+		len--, ans[len] = 0;
+	}
+		
+	else solve(num + 1);
+	return;
+}
+int main()
+{
+	cin >> n >> b >> d;
+	ans[0] = 0, len = 1;
+	solve(1);
+	system("pause");
+	return 0;
+}
