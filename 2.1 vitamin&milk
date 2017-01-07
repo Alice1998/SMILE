@@ -1,0 +1,80 @@
+#include "stdafx.h"
+
+/*
+ID: alicerd1
+PROG: holstein
+LANG: C++
+*/
+#include<iostream>
+#include<cstring>
+#include<cmath>
+#include <algorithm>
+#include<fstream>
+using namespace std;
+//ofstream fout("ariprog.out");
+//ifstream fin("ariprog.in");
+int v, g;
+int need[30], milk[20][30];
+int ans = 0, anslist[20];
+int now[30];
+int finalans = 0, flag = 0, finallist[20];
+void solve(int i)
+{
+	int k = 0;
+	while (k<v)
+	{
+		if (now[k]>0)
+			break;
+		k++;
+	}
+	if (k == v)
+	{
+		if (flag == 0)
+		{
+			finalans = ans;
+			for (int j = 0; j < ans; j++)
+				finallist[j] = anslist[j];
+			flag = 1;
+			return;
+		}
+		if (ans < finalans)
+		{
+			finalans = ans;
+			for (int j = 0; j < ans; j++)
+				finallist[j] = anslist[j];
+			return;
+		}
+		return;
+	}
+	if (i == g)
+		return;
+	for (int j = 0; j < v; j++)
+		now[j] = now[j] - milk[i][j];
+	anslist[ans] = i, ans++;
+	solve(i + 1);
+	anslist[ans-1] = 0, ans--;//
+	for (int j = 0; j < v; j++)//
+		now[j] = now[j] + milk[i][j];
+	solve(i + 1);
+}
+int main()
+{
+	cin >> v;
+	for (int i = 0; i < v; i++)
+		cin >> need[i], now[i] = need[i];
+	cin >> g;
+	for (int i = 0; i < g;i++)
+	for (int j = 0; j < v; j++)
+		cin >> milk[i][j];
+	solve(0);
+
+
+	
+	cout << finalans;
+	for (int i = 0; i < finalans; i++)
+		cout << ' ' << finallist[i] + 1;
+	cout << endl;
+	
+	system("pause");
+	return 0;
+}
