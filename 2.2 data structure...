@@ -1,0 +1,77 @@
+the KISS principle: ``Keep It Simple, Stupid.''
+
+There are several variants that ensure that the trees are never poor. 
+Splay trees, Red-black trees, Treaps, B-trees, and AVL trees are some of the more common examples. 
+They are all much more complicated to code, and random trees are generally good, so it's generally not worth it. 
+
+
+
+hash table
+ Let's see how hashing is really used. First, start with a structure that forms a linked list off the hash table. 
+ The linked list structure looks like this:
+
+struct hash_f {
+    struct hash_f *h_next;
+    char *h_string;
+    int   h_value;   /* some value associated with the string */
+               /* completely optional how it's used or even if it's present */
+};
+
+struct hash_f *hashtable[NHASH];      /* the head of each linked list */
+                        /* automatically set to NULL since it's global */
+
+
+
+       hashtable        *hash_f           *hash_f
+     +------------+
+   0 |            |  +-----------+    +-----------+
+     +------------+  |          *|-+  |          0| 
+   1 |            |  +-----------+ |  +-----------+
+     +------------+  | 'string1' | |  | 'abc def' |
+   2 |          * |->+-----------+ +->+-----------+
+     +------------+  | val=1234  |    | val=43225 |
+   3 |            |  +-----------+    +-----------+
+     +------------+ 
+	...
+8998 |            |
+     +------------+
+     
+     
+     Here's hashinsert:
+
+struct hash_f *
+hashinsert(p, val) 
+char *p;
+int val;
+{
+    int n = hashnum(p);				/* where in table? */
+    struct hash_f *h = malloc( sizeof (struct hash_f) ); /* make a new hash element */
+
+/* link into start of list: */
+    h->h_next = hashtable[n];
+    hashtable[n] = h;
+
+/* optional value: */
+    h->h_val = val;
+
+/* so we can later find the proper element in this chain: */
+    h->h_string = malloc( strlen(p) + 1 );  
+    strcpy (h->h_string, p);		     
+
+    return h;
+}
+
+
+And here's hashlookup (which will return a pointer to the hash structure if it's found):
+
+struct hash_f *
+hashlookup(p) {
+    struct hash_f *h;
+
+    int n = hashnum(p);				/* where to start looking */
+
+    for (h = hashtable[n]; h; h=h->h_next)	/* traverse linked list */
+	if (0 == strcmp (p, h->h_string))	/* string match? done! */
+	    return h;
+    return 0;					/* didn't find target */
+}
