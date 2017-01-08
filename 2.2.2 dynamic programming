@@ -1,0 +1,78 @@
+Recursive Descent Solution   ``one-dimensional''
+backwards
+
+10      for (i = 0; i < n; i++) fscanf(in, "%ld", &num[i]);
+11      bestsofar[n-1] = 1;
+12      for (i = n-1-1; i >= 0; i--) {
+13          bestsofar[i] = 1;                                             //设初值
+14          for (j = i+1; j < n; j++) {                                   //依次往后筛查得到当前这位的长度答案
+15              if (num[j] < num[i] && bestsofar[j] >= bestsofar[i])  {
+16                  bestsofar[i] = bestsofar[j] + 1;
+17                  if (bestsofar[i] > longest) longest = bestsofar[i];
+18              }
+19          }
+20      }
+
+
+
+
+☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆
+ #include <stdio.h>
+ 2  #define MAXN 200000
+ 3  main () {
+ 4      FILE *in, *out;
+ 5      long num[MAXN], bestrun[MAXN];
+ 6      long n, i, j, highestrun = 0;
+ 7      in = fopen ("input.txt", "r");
+ 8      out = fopen ("output.txt", "w");
+ 9      fscanf(in, "%ld", &n);
+10      for (i = 0; i < n; i++) fscanf(in, "%ld", &num[i]);
+11      bestrun[0] = num[n-1];
+12      highestrun = 1;
+13      for (i = n-1-1; i >= 0; i--) {
+14        if (num[i] < bestrun[0]) {
+15            bestrun[0] = num[i];
+16            continue;
+17        }
+18        for (j = highestrun - 1; j >= 0; j--) {
+19            if (num[i] > bestrun[j]) {
+20                if (j == highestrun - 1 || num[i] < bestrun[j+1]){
+21                    bestrun[++j] = num[i];
+22                    if (j == highestrun) highestrun++;
+23                    break;
+24                }
+25            }
+26        }
+27      }
+28      printf("best is %d\n", highestrun);
+29      exit(0);
+30  }
+
+
+
+
+☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆
+#include <stdio.h>
+#define SIZE 200000
+#define MAX(x,y) ((x)>(y)?(x):(y))
+
+int     best[SIZE];        // best[] holds values of the optimal sub-sequence
+
+int 
+main (void) {
+    FILE *in  = fopen ("input.txt", "r");
+    FILE *out = fopen ("output.txt", "w");
+    int     i, n, k, x, sol = -1;
+
+    fscanf (in, "%d", &n);	// N = how many integers to read in
+    for (i = 0; i < n; i++) {
+	best[i] = -1;
+	fscanf (in, "%d", &x);
+	for (k = 0; best[k] > x; k++)
+	    ;
+	best[k] = x;
+	sol = MAX (sol, k + 1);
+    }
+    printf ("best is %d\n", sol);
+    return 0;
+}
