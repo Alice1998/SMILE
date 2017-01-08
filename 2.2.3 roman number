@@ -1,0 +1,58 @@
+#include "stdafx.h"
+
+/*
+ID: alicerd1
+PROG: preface
+LANG: C++
+*/
+#include<iostream>
+#include<cstring>
+#include<cmath>
+#include <algorithm>
+#include<fstream>
+using namespace std;
+//ofstream fout("preface.out");
+//ifstream fin("preface.in");
+int n, num, length;
+int ans[7] = { 0 };
+int save[3600][8];
+int final[7];
+char roman[7] = { 'I', 'V', 'X', 'L', 'C', 'D', 'M' };
+void solve(int x)
+{
+	int wei[4];
+	wei[0] = x % 10;
+	wei[1] = (x / 10) % 10;
+	wei[2] = (x / 100) % 10;
+	wei[3] = (x / 1000) % 10;
+	int i = 0;
+	while (i < 4)//☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆	
+{
+		switch (wei[i])
+		{
+		case 0:break;
+		case 1:save[x][i * 2] = save[x][i * 2]+1; break;
+		case 2:save[x][i * 2] = save[x][i * 2]+2; break;
+		case 3:save[x][i * 2] = save[x][i * 2] + 3; break;
+		case 4:save[x][i * 2] = save[x][i * 2] + 1, save[x][i * 2 + 1] = save[x][i * 2 + 1]+1; break;
+		case 5:save[x][i * 2] = save[x][i * 2] + 0, save[x][i * 2 + 1] = save[x][i * 2 + 1] + 1; break;
+		case 6:save[x][i * 2] = save[x][i * 2] + 1, save[x][i * 2 + 1] = save[x][i * 2 + 1] + 1; break;
+		case 7:save[x][i * 2] = save[x][i * 2] + 2, save[x][i * 2 + 1] = save[x][i * 2 + 1] + 1; break;
+		case 8:save[x][i * 2] = save[x][i * 2] + 3, save[x][i * 2 + 1] = save[x][i * 2 + 1] + 1; break;
+		case 9:save[x][i * 2] = save[x][i * 2] + 1, save[x][i * 2 + 2] = save[x][i * 2 + 2] + 1; break;
+		}
+		i++;
+	}
+	for (int j = 0; j < 7; j++)
+		final[j] = final[j] + save[x][j];
+}
+int main()
+{
+	cin >> n;
+	for (int i = 1; i <= n; i++)
+		solve(i);
+	for (int i = 0; (i < 7)&&(final[i]!=0); i++)
+		cout << roman[i]<<' '<<final[i] << endl;
+	system("pause");
+	return 0;
+}
