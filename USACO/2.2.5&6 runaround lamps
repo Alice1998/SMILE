@@ -1,0 +1,196 @@
+#include "stdafx.h"
+
+/*
+ID: alicerd1
+PROG: lamps
+LANG: C++
+*/
+#include<iostream>
+#include<cstring>
+#include<cmath>
+#include <algorithm>
+#include<fstream>
+using namespace std;
+//ofstream fout("ariprog.out");
+//ifstream fin("ariprog.in");
+bool panduan = true;
+int n, c;
+int lamp[100];
+int flag[7] = { 0 };
+int light[9][6] = {
+	0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0,//按1  
+	0, 0, 1, 1, 1, 0,//按1按4  
+	0, 1, 0, 1, 0, 1,//按3  
+	0, 1, 1, 0, 1, 1,//按1按4  
+	1, 0, 0, 1, 0, 0,//按4  
+	1, 0, 1, 0, 1, 0,//按2  
+	1, 1, 0, 0, 0, 1,//按2按4  
+	1, 1, 1, 1, 1, 1,//不按  
+};//常量表  
+
+int minnum[9] = { 0, 1, 2, 1, 1, 2, 1, 2, 0 };
+void Output(int level)
+{
+	if (level == 6)
+	{
+		for (int i = 0; i < n; i++)
+			cout << lamp[i % 6];
+		cout << endl;
+		panduan = true;
+		return;
+	}
+	if (flag[level]>0)
+	{
+		Output(level + 1);
+		return;
+	}
+	Output(level + 1);
+	lamp[level] = 1;
+	Output(level + 1);
+	lamp[level] = 0;
+}
+bool save(int i,int state)
+{
+	if (i == -1)
+		return true;
+	i = i + 5;//important
+  if (flag[i % 6] > 0 && lamp[i % 6] != state)
+		return false;
+	flag[i % 6]++;
+	lamp[i % 6] = state;
+	return true;
+}
+bool check()
+{
+	for (int i = 0; i < 6; i++)
+	{
+		if (flag[i]>0 && lamp[i] != init[i])
+			return false;
+	}
+	return true;
+}
+int main()
+{
+	cin >> n >> c;
+	int tem, onnum = 0, offnum = 0;
+	
+	cin >> tem;
+	if (tem != -1)
+		panduan=panduan&&save(tem,1), onnum++;
+	while (tem != -1)
+		cin >> tem, panduan=panduan&&save(tem,1),onnum++;
+	cin >> tem;
+	if (tem != -1)
+		panduan=panduan&&save(tem,0), offnum++;
+	while (tem != -1)
+		cin >> tem, panduan=panduan&&save(tem,0), offnum++;
+	if (!panduan)
+		cout << "IMPOSSIBLE" << endl;
+
+        bool flag1 = false;
+		bool flag2;
+		for (int i = 1; i < 9; i++)
+		{
+			flag2 = true;
+			for (int j = 0; j < 6; j++)
+			{
+				if (flag[j] == 0)
+					continue;
+				if (lamp[j] != light[i][j])
+				{
+					flag2 = false;
+					break;
+				}
+			}
+			if (flag2 == true && c >= minnum[i])
+			{
+				flag1 = true;
+				for (int j = 0; j < n; j++)
+				{
+					cout << light[i][j % 6];
+				}
+				cout << endl;
+			}
+		}
+		if (flag1 == false)
+			cout << "IMPOSSIBLE" << endl;
+	system("pause");
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+/*
+ID: alicerd1
+PROG: runround
+LANG: C++
+*/
+#include<iostream>
+#include<cstring>
+#include<cmath>
+#include <algorithm>
+#include<fstream>
+using namespace std;
+ofstream fout("runround.out");
+ifstream fin("runround.in");
+int n;
+
+bool solve(int x)
+{
+	int a[11] = { 0 };
+	int b[11] = { 0 };
+	int length = 0;
+	int flagcheck[10] = { 0 };
+	b[0] = x % 10, x = x / 10, length++;
+	for (; x != 0; length++)
+	{
+		b[length] = x % 10, x = x / 10;
+	}
+	for (int c = 0; c < length; c++)
+	{
+		a[c] = b[length - 1 - c];
+		flagcheck[a[c]]++;
+	}if (flagcheck[0]>0)
+		return false;
+	for (int c = 1; c < 10;c++)
+	if (flagcheck[c]>1)
+		return false;
+	int temp[1000][11] = { 0 },tem=0;
+	int i = 0,j = 0;
+	temp[0][0] = a[0];
+	for (i = 1; i <= a[0]; i++)
+		tem = i%length, temp[0][i] = a[tem];
+	j++;
+	int flag = 0, numflag[11] = { 0 };
+	numflag[0]++;
+	while (temp[j-1][temp[j-1][0]]!=temp[0][0]&&flag<15)
+	{
+		temp[j][0] = a[tem], numflag[tem]++;
+		for (int k = 1; k <= temp[j][0]; k++)
+			tem = i%length, temp[j][k] = a[tem], i++;
+		j++;
+		flag++;
+	}
+	bool panduan = true;
+	for (int c = 0; c < length;c++)
+	if (numflag[c] == 0)
+		panduan = false;
+	if (tem == 0&&temp[j - 1][temp[j - 1][0]] == temp[0][0]&&panduan)
+	return true;
+	return false;
+}
+int main()
+{
+	fin >> n;
+	while (!solve(n + 1))
+		n++;
+	fout << n + 1 << endl;
+	return 0;
+}
