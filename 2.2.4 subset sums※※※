@@ -1,0 +1,70 @@
+newbucket[j + added_number] += olderbucket[j]
+Lev::   0  1  2  3  4  5  6  7  8  9 10 11  ...
+  1::   1  1  0  0  0  0  0  0  0  0  0  0  ...
+  2::   1  1  1  1  0  0  0  0  0  0  0  0  ...
+  3::   1  1  1  2  1  1  1  0  0  0  0  0  ...
+  4::   1  1  1  2  2  2  2  2  1  1  1  0  ...
+  ans for N=7: row 7, column 14 and divide it by 2!!!
+  
+   for (i = 1; i <= n; i++)
+        for (j = s; j >= i; j--) 
+            dyn[j] += dyn[j-i];
+    fout << (dyn[s]/2) << endl;
+    
+    
+    another solution:
+    save[sum][num]=save[sum][num-1]+save[sum-num][num-1]
+    the same, different realization process
+    
+    
+#include "stdafx.h"
+
+/*
+ID: alicerd1
+PROG: 
+LANG: C++
+*/
+#include<iostream>
+#include<cstring>
+#include<cmath>
+#include <algorithm>
+#include<fstream>
+using namespace std;
+//ofstream fout("ariprog.out");
+//ifstream fin("ariprog.in");
+int n, ans;
+int s;
+int save[1600][40] = { 0 };
+int solve(int now,int num)
+{
+	if (now < 0 || num == 0)
+		return 0;
+	if (save[now][num] != -1)
+		return save[now][num];
+	if (now == 0)
+	{
+		save[now][num] = 1;
+		return 1;
+	}
+	save[now][num] = solve(now, num - 1) + solve(now - num, num - 1);
+	return save[now][num];
+}
+int main()
+{
+	cin >> n;
+	s = (n + 1)*n / 2;
+	if (s % 2 == 1)
+		cout << '0' << endl;
+	else
+	{
+		for (int i = 0; i <= n;i++)
+		for (int j = 0; j <= s / 2; j++)
+			save[j][i]--;
+		cout <<solve(s/2,n)<< endl;
+	}
+	//for (int i = 0; i < 7;i++)
+	//for (int j = 0; j < 14; j++)
+	//	cout << save[i][j] << endl;
+	system("pause");
+	return 0;
+}
