@@ -1,0 +1,74 @@
+#include "stdafx.h"
+
+/*
+ID: alicerd1
+PROG: zerosum
+LANG: C++
+*/
+#include<iostream>
+#include<cstring>
+#include<cmath>
+#include <algorithm>
+#include<fstream>
+using namespace std;
+//ofstream fout("zerosum.out");
+//ifstream fin("zerosum.in");
+int n;
+int sum = 1;
+char digit[10];
+void solve(int level)
+{
+	if (level == n+1)
+	{
+		if (sum == 0)
+		{
+			cout << '1';
+			for (int i = 2; i <= n; i++)
+				cout << digit[i - 1] << i;
+			cout << endl;
+		}
+		return;
+	}
+	digit[level - 1] = ' ';
+	int wei = level - 2;
+	while (wei >= 1 && digit[wei] != '+'&&digit[wei] != '-')
+		wei--;
+	if (wei < 1)
+		sum = sum * 10 + level;
+	int temp = 0;
+	if (digit[wei] == '+')
+	{
+		for (int i = 0; i < level - 1 - wei; i++)
+			temp = temp + pow(10, i)*(level-1 - i);
+		sum = sum - temp + temp * 10 + level;
+	}
+	if (digit[wei] == '-')
+	{
+		for (int i = 0; i < level - 1 - wei; i++)
+			temp = temp + pow(10, i)*(level-1 - i);
+		sum = sum + temp - temp * 10 - level;
+	}
+	solve(level + 1);
+	if (wei < 1)
+		sum = (sum - level) / 10;
+	if (digit[wei] == '+')
+		sum = sum - level - temp * 9;//
+	if (digit[wei] == '-')
+		sum = sum + level + temp * 9;
+	digit[level - 1] = 0;
+	digit[level - 1] = '+';
+	sum = sum + level;
+	solve(level + 1);
+	digit[level - 1] = '-';
+	sum = sum - 2 * level;
+	solve(level + 1);
+	sum = sum + level;//
+}
+int main()
+{
+	cin >>n;
+	solve(2);
+
+	system("pause");
+	return 0;
+}
