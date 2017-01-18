@@ -1,0 +1,28 @@
+输入表示文件结束
+Ctrl+z,Enter/Return
+
+#include<iostream>
+using namespace std;
+int main()
+{
+  int curval=0,val=0;
+  if(cin>>curval)
+  {
+   int cnt=1;
+   while(cin>>val)
+   {
+    if(val==curval)
+     cnt++;
+    else
+    {
+      cout<<curval<<"occurs"<<cnt<<"times"<<endl;
+      curval=val;
+      cnt=1;
+     }
+   }//while ends here
+   cout<<curval>>"occurs"<<cnt<<"times"<<endl;
+  }
+  return 0;
+}
+     
+  
