@@ -3,6 +3,37 @@ Ctrl+z,Enter/Return
 
 #include<iostream>
 using namespace std;
+1.5类 class
+#include<iostream>
+#include "Sales_item.h"
+int main()
+{
+  Sales_item total;
+  if(std::cin>>total)
+  {
+    Sales_item trans;
+    while(std::cin>>trans)
+    {
+      if(total.isbn()==trans.isbn())
+        total+=trans;
+      else
+      {
+        std::cout<<total<<std::endl;
+        total+=trans;
+       }
+     }
+     std::cput<<total<<std::endl;
+   }
+   else
+   {
+    std::cout<<"No data?!"<<std::endl;
+    return -1;
+    }
+  return 0;
+}
+
+
+
 int main()
 {
   int curval=0,val=0;
