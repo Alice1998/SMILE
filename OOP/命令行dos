@@ -1,3 +1,23 @@
 cd（打开文件夹，打开文件的时候直接输入名字.后缀） dir   del *.exe
+cd ..   cd /                                  dir *.cpp
+type 文件名
+D:\work hard\大学\大一freshman\寒假>findstr -sm "编译环境与工具" *   搜索 findstr -sm "文件名" *
+
+
 编译链接
 cl -EHsc func.cpp main.cpp
+
+# makefile文件中#为注释
+all: main.exe test.exe
+main.exe: main.cpp student.cpp
+  g++ -o main.exe main.cpp student.cpp
+test.exe: student.cpp student_test.cpp
+	g++-o test.exe student.cpp student_test.cpp
+clean:
+	del *.exe *.obj
+  
+  执行方法
+  make
+  make 任务名
+  make -f 自己命名的makefile文件名 任务名(test.exe)
+  
